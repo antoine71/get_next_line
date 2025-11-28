@@ -24,6 +24,7 @@ typedef struct s_buffer
 	char	start[BUFFER_SIZE];
 	char	*read;
 	char	*end;
+	int		eol;
 	int		eof;
 }	t_buffer;
 
