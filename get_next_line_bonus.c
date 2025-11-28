@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/26 13:42:45 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 16:16:44 by arebilla         ###   ########.fr       */
+/*   Created: 2025/11/28 16:47:11 by arebilla          #+#    #+#             */
+/*   Updated: 2025/11/28 16:47:14 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,13 @@ static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer,
 
 char	*get_next_line(int fd)
 {
-	static t_buffer	buffer;
+	static t_buffer	buffer[1024];
 	t_line_buffer	*line_buffer;
 	char			*line;
 	size_t			len_line;
 
 	len_line = 0;
-	line_buffer = read_until_eol_or_eof(fd, &buffer, &len_line);
+	line_buffer = read_until_eol_or_eof(fd, &buffer[fd], &len_line);
 	if (!line_buffer)
 		return (NULL);
 	line = malloc(len_line + 1);
