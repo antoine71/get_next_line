@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 16:47:11 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 18:07:07 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 18:12:50 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ static void	fill_buffer(int fd, t_buffer *buffer)
 {
 	ssize_t	read_bytes;
 	size_t	size;
-	
+
 	if (BUFFER_SIZE > 0x7ffff000)
 		size = 0x7ffff000;
 	else
@@ -86,7 +86,10 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = malloc(len_line + 1);
 	if (!line)
+	{
+		free_line_buffer(line_buffer);
 		return (NULL);
+	}
 	line = contactenate_content(line, line_buffer);
 	free_line_buffer(line_buffer);
 	return (line);
