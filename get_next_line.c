@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 13:42:45 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 13:40:37 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:43:51 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ char	*get_next_line(int fd)
 	static t_buffer	buffer = {{}, 0, 0, BUFFER_SIZE, 0};
 	t_line_buffer	*line_buffer;
 	char			*line;
-	size_t			len_tot;
+	size_t			len_line;
 
 	len_line = 0;
 	line_buffer = read_until_eol_or_eof(fd, &buffer, &len_line);
 	if (!line_buffer)
 		return (NULL);
-	line = malloc(len_tot + 1);
+	line = malloc(len_line + 1);
 	if (!line)
 		return (NULL);
 	line = contactenate_content(line, line_buffer);
