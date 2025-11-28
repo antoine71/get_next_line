@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 16:47:11 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 16:47:14 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 18:07:07 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,18 @@
 static void	fill_buffer(int fd, t_buffer *buffer)
 {
 	ssize_t	read_bytes;
-
-	read_bytes = read(fd, buffer->start, BUFFER_SIZE);
+	size_t	size;
+	
+	if (BUFFER_SIZE > 0x7ffff000)
+		size = 0x7ffff000;
+	else
+		size = BUFFER_SIZE;
+	read_bytes = read(fd, buffer->start, size);
 	if (read_bytes < 0)
 		return ;
 	buffer->end = buffer->start + read_bytes;
 	buffer->read = buffer->start;
-	buffer->eof = (size_t)read_bytes < BUFFER_SIZE;
+	buffer->eof = (size_t)read_bytes < size;
 }
 
 static char	*copy_buffer(t_buffer *buffer, size_t len)
