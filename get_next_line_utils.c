@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 22:09:41 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 11:14:55 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:40:39 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,22 +61,10 @@ void	free_line_buffer(t_line_buffer *line_buffer)
 	free(line_buffer);
 }
 
-char	*contactenate_content(t_line_buffer *line_buffer)
+char	*contactenate_content(char *line, t_line_buffer *line_buffer)
 {
-	size_t			len;
-	char			*line;
-	t_line_buffer	*p;
+	size_t	len;
 
-	len = 0;
-	p = line_buffer;
-	while (p)
-	{
-		len += p->len;
-		p = p->next;
-	}
-	line = malloc(len + 1);
-	if (!line)
-		return (NULL);
 	len = 0;
 	while (line_buffer)
 	{

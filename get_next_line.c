@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 13:42:45 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 12:26:57 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:40:37 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ static char	*copy_buffer(t_buffer *buffer, size_t len)
 	return (content);
 }
 
-static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer)
+static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer,
+												size_t *len_line)
 {
 	t_line_buffer	*line_buffer;
 	char			*eol;
@@ -55,6 +56,7 @@ static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer)
 		len = eol - buffer->read + 1;
 	else
 		len = buffer->end - buffer->read;
+	*len_line += len;
 	content = copy_buffer(buffer, len);
 	if (!content)
 		return (NULL);
@@ -62,7 +64,7 @@ static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer)
 	if (buffer->eof || eol)
 		line_buffer->next = NULL;
 	else
-		line_buffer->next = read_until_eol_or_eof(fd, buffer);
+		line_buffer->next = read_until_eol_or_eof(fd, buffer, len_line);
 	return (line_buffer);
 }
 
@@ -71,11 +73,16 @@ char	*get_next_line(int fd)
 	static t_buffer	buffer = {{}, 0, 0, BUFFER_SIZE, 0};
 	t_line_buffer	*line_buffer;
 	char			*line;
+	size_t			len_tot;
 
-	line_buffer = read_until_eol_or_eof(fd, &buffer);
+	len_line = 0;
+	line_buffer = read_until_eol_or_eof(fd, &buffer, &len_line);
 	if (!line_buffer)
 		return (NULL);
-	line = contactenate_content(line_buffer);
+	line = malloc(len_tot + 1);
+	if (!line)
+		return (NULL);
+	line = contactenate_content(line, line_buffer);
 	free_line_buffer(line_buffer);
 	return (line);
 }
