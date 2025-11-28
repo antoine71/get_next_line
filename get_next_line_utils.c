@@ -6,72 +6,81 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 22:09:41 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/26 22:31:54 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 10:10:14 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include <string.h>
 #include "get_next_line.h"
 
 void	*ft_memcpy(void *dest, const void *src, size_t len)
 {
-	// TODO to implement
-	return memcpy(dest, src, len);
+	unsigned char		*d;
+	unsigned char const	*s;
+
+	d = (unsigned char *)dest;
+	s = (unsigned char const *)src;
+	while (len--)
+		*d++ = *s++;
+	return (dest);
 }
 
 void	*ft_memchr(const void *str, int c, size_t n)
 {
-	// TODO to implement
-	return memchr(str, c, n);
+	unsigned char const	*s;
+
+	s = (unsigned char const *)str;
+	while (n--)
+	{
+		if ((unsigned char)c == *s)
+			return (s);
+		s++;
+	}
+	return (NULL);
 }
 
-t_line_buffer	*new_line_buffer(void)
+t_line_buffer	new_line_buffer(char *content, size_t len)
 {
 	t_line_buffer	*line_buffer;
 
 	line_buffer = malloc(sizeof(t_line_buffer));
 	if (!line_buffer)
 		return (NULL);
-	line_buffer->content = NULL;
-	line_buffer->len = 0;
+	line_buffer->content = copy_buffer(buffer, len);
+	line_buffer->len = len;
 	line_buffer->next = NULL;
 	return (line_buffer);
 }
 
-void	free_line_buffer(t_line_buffer **line_buffer)
+void	free_line_buffer(t_line_buffer *line_buffer)
 {
-	if (*line_buffer == NULL)
+	if (line_buffer == NULL)
 		return ;
-	free((*line_buffer)->content);
-	free_line_buffer(&((*line_buffer)->next));
-	free(*line_buffer);
+	free(line_buffer->content);
+	free_line_buffer(line_buffer->next));
+	free(line_buffer);
 }
 
-char	*contactenate_line_buffer(t_line_buffer *line_buffer)
+char	*contactenate_content(t_line_buffer *line_buffer)
 {
 	size_t			len;
-	size_t			len_counter;
 	char			*line;
-	t_line_buffer	*line_buffer_tmp;
 
 	len = 0;
-	line_buffer_tmp = line_buffer;
-	while (line_buffer_tmp)
+	while (line_buffer)
 	{
-		len += line_buffer_tmp->len;
-		line_buffer_tmp = line_buffer_tmp->next;
+		len += line_buffer->len;
+		line_buffer = line_buffer->next;
 	}
 	line = malloc(len + 1);
 	if (!line)
 		return (NULL);
-	line_buffer_tmp = line_buffer;
-	len_counter = 0;
-	while (line_buffer_tmp)
+	len = 0;
+	while (line_buffer)
 	{
-		ft_memcpy(line + len_counter, line_buffer_tmp->content, line_buffer_tmp->len);
-		len_counter += line_buffer_tmp->len;
-		line_buffer_tmp = line_buffer_tmp->next;
+		ft_memcpy(line + len, line_buffer->content, line_buffer->len);
+		len += line_buffer->len;
+		line_buffer = line_buffer->next;
 	}
 	line[len] = '\0';
 	return (line);

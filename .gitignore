@@ -1,1 +1,6 @@
 get_next_line.o
+test
+test/*
+./a.out
+test/get_next_line
+a.out

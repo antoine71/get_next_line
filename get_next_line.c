@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 13:42:45 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/26 22:26:56 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 10:49:00 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,49 +21,46 @@ static void	fill_buffer(int fd, t_buffer *buffer)
 	read_bytes = read(fd, buffer->content, buffer->size);
 	if (read_bytes <= 0)
 	{
-		buffer->len = 0;
+		buffer->end = buffer->start;
 		return ;
 	}
-	buffer->len = read_bytes;
-	buffer->read_index = 0;
+	buffer->end = buffer->start + read_bytes;
+	buffer->read = buffer->start;
 	if ((size_t)read_bytes < buffer->size)
 		buffer->eof = 1;
 }
 
-static char	*empty_buffer(t_buffer *buffer, size_t len)
+static char	*copy_buffer(t_buffer *buffer, size_t len)
 {
 	char	*content;
-	
+
 	content = malloc(len);
 	if (!content)
 		return (NULL);
-	ft_memcpy(content, buffer->content + buffer->read_index, len);
-	buffer->read_index += len;
+	ft_memcpy(content, buffer->read, len);
+	buffer->read += len;
 	return (content);
 }
 
 static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer)
 {
 	t_line_buffer	*line_buffer;
-	char	*eol;
-	size_t	len;
+	char			*eol;
+	size_t			len;
 
-	if (!buffer->len || buffer->read_index == buffer->len)
+	if (buffer->start == buffer->end || buffer->read == buffer->end)
 		fill_buffer(fd, buffer);
-	if (!buffer->len)
+	if (buffer->end == buffer->start)
 		return (NULL);
-	eol = ft_memchr(buffer->content + buffer->read_index, '\n', buffer->size - buffer->read_index);
+	eol = ft_memchr(buffer->read, '\n', buffer->end);
 	if (eol)
-		len = eol - buffer->content - buffer->read_index + 1;
+		len = eol - buffer->read + 1;
 	else
-		len = buffer->len - buffer->read_index;
-	line_buffer = new_line_buffer();
-	if (!line_buffer)
+		len = buffer->end - buffer->read;
+	content = copy_buffer(buffer, len);
+	if (!content)
 		return (NULL);
-	line_buffer->content = empty_buffer(buffer, len);
-	if (!line_buffer->content)
-		return (NULL);
-	line_buffer->len = len;
+	line_buffer = new_line_buffer(content, len);
 	if (buffer->eof || eol)
 		line_buffer->next = NULL;
 	else
@@ -73,16 +70,16 @@ static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer)
 
 char	*get_next_line(int fd)
 {
-	static t_buffer	buffer = { {}, BUFFER_SIZE, 0, 0, 0 };
+	static t_buffer	buffer = {{}, 0, 0, BUFFER_SIZE, 0};
 	t_line_buffer	*line_buffer;
-	char	*line;
+	char			*line;
 
-	if (buffer.eof && buffer.read_index == buffer.len)
+	if (buffer.eof && buffer.read == buffer.end)
 		return (NULL);
 	line_buffer = read_until_eol_or_eof(fd, &buffer);
 	if (!line_buffer)
 		return (NULL);
 	line = contactenate_line_buffer(line_buffer);
-	free_line_buffer(&line_buffer);
+	free_line_buffer(line_buffer);
 	return (line);
 }

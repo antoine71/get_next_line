@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 13:13:35 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/26 22:19:05 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 10:38:06 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,23 @@
 #  define BUFFER_SIZE 10000
 # endif
 
-#include <stddef.h>
+# include <stddef.h>
 
-typedef struct s_buffer {
-	char	content[BUFFER_SIZE];
+typedef struct s_buffer
+{
+	char	start[BUFFER_SIZE];
+	char	*read;
+	char	*end;
 	size_t	size;
-	size_t	len;
-	size_t	read_index;
 	int		eof;
-} t_buffer;
+}	t_buffer;
 
-typedef struct s_line_buffer {
+typedef struct s_line_buffer
+{
 	char					*content;
 	size_t					len;
 	struct s_line_buffer	*next;
-} t_line_buffer;
+}	t_line_buffer;
 
 char			*get_next_line(int fd);
 t_line_buffer	*new_line_buffer(void);
