@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 22:09:41 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 10:10:14 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 11:14:55 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,20 @@ void	*ft_memchr(const void *str, int c, size_t n)
 	while (n--)
 	{
 		if ((unsigned char)c == *s)
-			return (s);
+			return ((void *)s);
 		s++;
 	}
 	return (NULL);
 }
 
-t_line_buffer	new_line_buffer(char *content, size_t len)
+t_line_buffer	*new_line_buffer(char *content, size_t len)
 {
 	t_line_buffer	*line_buffer;
 
 	line_buffer = malloc(sizeof(t_line_buffer));
 	if (!line_buffer)
 		return (NULL);
-	line_buffer->content = copy_buffer(buffer, len);
+	line_buffer->content = content;
 	line_buffer->len = len;
 	line_buffer->next = NULL;
 	return (line_buffer);
@@ -57,7 +57,7 @@ void	free_line_buffer(t_line_buffer *line_buffer)
 	if (line_buffer == NULL)
 		return ;
 	free(line_buffer->content);
-	free_line_buffer(line_buffer->next));
+	free_line_buffer(line_buffer->next);
 	free(line_buffer);
 }
 
@@ -65,12 +65,14 @@ char	*contactenate_content(t_line_buffer *line_buffer)
 {
 	size_t			len;
 	char			*line;
+	t_line_buffer	*p;
 
 	len = 0;
-	while (line_buffer)
+	p = line_buffer;
+	while (p)
 	{
-		len += line_buffer->len;
-		line_buffer = line_buffer->next;
+		len += p->len;
+		p = p->next;
 	}
 	line = malloc(len + 1);
 	if (!line)

@@ -4,3 +4,7 @@ test/*
 ./a.out
 test/get_next_line
 a.out
+42test-gnl-station-2022 test
+get_next_line.o get_next_line_utils.o
+*.o
+*test*

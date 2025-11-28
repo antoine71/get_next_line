@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 13:13:35 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 10:38:06 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/28 11:04:23 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ typedef struct s_line_buffer
 }	t_line_buffer;
 
 char			*get_next_line(int fd);
-t_line_buffer	*new_line_buffer(void);
-void			free_line_buffer(t_line_buffer **line_buffer);
-char			*contactenate_line_buffer(t_line_buffer *line_buffer);
+t_line_buffer	*new_line_buffer(char *content, size_t len);
+void			free_line_buffer(t_line_buffer *line_buffer);
+char			*contactenate_content(t_line_buffer *line_buffer);
 void			*ft_memcpy(void *dest, const void *src, size_t len);
 void			*ft_memchr(const void *str, int c, size_t n);
 
