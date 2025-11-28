@@ -26,7 +26,12 @@ static void	fill_buffer(int fd, t_buffer *buffer)
 		size = BUFFER_SIZE;
 	read_bytes = read(fd, buffer->start, size);
 	if (read_bytes < 0)
+  {
+    buffer->end = buffer->start;
+    buffer->read = buffer->start;
+    buffer->eof = 1;
 		return ;
+  }
 	buffer->end = buffer->start + read_bytes;
 	buffer->read = buffer->start;
 	buffer->eof = (size_t)read_bytes < size;
@@ -66,6 +71,8 @@ static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer,
 	if (!content)
 		return (NULL);
 	line_buffer = new_line_buffer(content, len);
+  if (!line_buffer)
+    return (NULL);
 	if (buffer->eof || eol)
 		line_buffer->next = NULL;
 	else
