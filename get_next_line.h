@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 13:13:35 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 16:16:35 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/29 08:48:29 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ typedef struct s_buffer
 	char	*end;
 	int		eol;
 	int		eof;
+	int		error;
 }	t_buffer;
 
 typedef struct s_line_buffer

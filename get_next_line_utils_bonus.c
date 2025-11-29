@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/28 16:47:24 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/28 16:47:37 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/11/29 08:30:34 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@ void	free_line_buffer(t_line_buffer *line_buffer)
 {
 	if (line_buffer == NULL)
 		return ;
-	free(line_buffer->content);
 	free_line_buffer(line_buffer->next);
+	free(line_buffer->content);
 	free(line_buffer);
 }
 
