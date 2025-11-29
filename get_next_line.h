@@ -27,6 +27,7 @@ typedef struct s_buffer
 	int		eol;
 	int		eof;
 	int		error;
+  size_t  len_line;
 }	t_buffer;
 
 typedef struct s_line_buffer
