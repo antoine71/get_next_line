@@ -6,14 +6,13 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 09:59:07 by arebilla          #+#    #+#             */
-/*   Updated: 2025/12/01 10:01:15 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/12/01 10:20:57 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
 #include <stdlib.h>
 #include "get_next_line_bonus.h"
-#include <string.h>
 
 static void	fill_buffer(int fd, t_buffer *buffer)
 {
