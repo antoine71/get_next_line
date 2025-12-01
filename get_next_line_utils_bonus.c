@@ -5,13 +5,13 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/28 16:47:24 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/29 08:30:34 by arebilla         ###   ########.fr       */
+/*   Created: 2025/12/01 09:59:35 by arebilla          #+#    #+#             */
+/*   Updated: 2025/12/01 09:59:40 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	*ft_memcpy(void *dest, const void *src, size_t len)
 {
@@ -56,8 +56,8 @@ void	free_line_buffer(t_line_buffer *line_buffer)
 {
 	if (line_buffer == NULL)
 		return ;
-	free_line_buffer(line_buffer->next);
 	free(line_buffer->content);
+	free_line_buffer(line_buffer->next);
 	free(line_buffer);
 }
 

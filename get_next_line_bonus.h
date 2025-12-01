@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/28 16:46:38 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/29 08:15:14 by arebilla         ###   ########.fr       */
+/*   Created: 2025/12/01 09:59:16 by arebilla          #+#    #+#             */
+/*   Updated: 2025/12/01 10:03:19 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # endif
 
 # ifndef FD_RANGE
-#  define FD_RANGE 1024
+#  define FD_RANGE 1024 
 # endif
 
 # include <stddef.h>
@@ -30,6 +30,8 @@ typedef struct s_buffer
 	char	*end;
 	int		eol;
 	int		eof;
+	int		error;
+	size_t	len_line;
 }	t_buffer;
 
 typedef struct s_line_buffer

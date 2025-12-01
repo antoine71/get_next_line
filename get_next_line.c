@@ -6,7 +6,7 @@
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 13:42:45 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/29 08:58:33 by arebilla         ###   ########.fr       */
+/*   Updated: 2025/12/01 09:50:24 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,10 @@ static char	*copy_buffer(t_buffer *buffer, size_t len)
 
 	content = malloc(len);
 	if (!content)
-  {
-    buffer->error = 1;
+	{
+		buffer->error = 1;
 		return (NULL);
-  }
+	}
 	ft_memcpy(content, buffer->read, len);
 	buffer->read += len;
 	return (content);
@@ -91,7 +91,7 @@ static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer)
 		return (NULL);
 	}
 	if (!buffer->eof && !buffer->eol)
-		line_buffer->next = read_until_eol_or_eof(fd, buffer, len_line);
+		line_buffer->next = read_until_eol_or_eof(fd, buffer);
 	return (line_buffer);
 }
 

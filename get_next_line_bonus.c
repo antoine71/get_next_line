@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: arebilla <arebilla@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/26 13:42:45 by arebilla          #+#    #+#             */
-/*   Updated: 2025/11/29 08:14:30 by arebilla         ###   ########.fr       */
+/*   Created: 2025/12/01 09:59:07 by arebilla          #+#    #+#             */
+/*   Updated: 2025/12/01 10:01:15 by arebilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,12 +29,12 @@ static void	fill_buffer(int fd, t_buffer *buffer)
 	{
 		buffer->end = buffer->start;
 		buffer->read = buffer->start;
-		buffer->eof = 1;
+		buffer->error = 1;
 		return ;
 	}
 	buffer->end = buffer->start + read_bytes;
 	buffer->read = buffer->start;
-	buffer->eof = (size_t)read_bytes < size;
+	buffer->eof = (read_bytes == 0);
 }
 
 static char	*copy_buffer(t_buffer *buffer, size_t len)
@@ -43,7 +43,10 @@ static char	*copy_buffer(t_buffer *buffer, size_t len)
 
 	content = malloc(len);
 	if (!content)
+	{
+		buffer->error = 1;
 		return (NULL);
+	}
 	ft_memcpy(content, buffer->read, len);
 	buffer->read += len;
 	return (content);
@@ -65,8 +68,7 @@ size_t	check_eol(t_buffer *buffer)
 	return (len);
 }
 
-static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer,
-												size_t *len_line)
+static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer)
 {
 	t_line_buffer	*line_buffer;
 	size_t			len;
@@ -74,10 +76,10 @@ static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer,
 
 	if (buffer->read == buffer->end)
 		fill_buffer(fd, buffer);
-	if (buffer->read == buffer->end)
+	if (buffer->read == buffer->end || buffer->error)
 		return (NULL);
 	len = check_eol(buffer);
-	*len_line += len;
+	buffer->len_line += len;
 	content = copy_buffer(buffer, len);
 	if (!content)
 		return (NULL);
@@ -85,10 +87,11 @@ static t_line_buffer	*read_until_eol_or_eof(int fd, t_buffer *buffer,
 	if (!line_buffer)
 	{
 		free(content);
+		buffer->error = 1;
 		return (NULL);
 	}
 	if (!buffer->eof && !buffer->eol)
-		line_buffer->next = read_until_eol_or_eof(fd, buffer, len_line);
+		line_buffer->next = read_until_eol_or_eof(fd, buffer);
 	return (line_buffer);
 }
 
@@ -97,16 +100,19 @@ char	*get_next_line(int fd)
 	static t_buffer	buffer[FD_RANGE];
 	t_line_buffer	*line_buffer;
 	char			*line;
-	size_t			len_line;
 
 	if (fd < 0 || fd > FD_RANGE)
 		return (NULL);
-	len_line = 0;
-	line_buffer = read_until_eol_or_eof(fd, &buffer[fd], &len_line);
+	buffer[fd].len_line = 0;
+	buffer[fd].error = 0;
 	buffer[fd].eol = 0;
-	if (!line_buffer)
+	line_buffer = read_until_eol_or_eof(fd, &buffer[fd]);
+	if (!line_buffer || buffer[fd].error)
+	{
+		free_line_buffer(line_buffer);
 		return (NULL);
-	line = malloc(len_line + 1);
+	}
+	line = malloc(buffer[fd].len_line + 1);
 	if (!line)
 	{
 		free_line_buffer(line_buffer);
